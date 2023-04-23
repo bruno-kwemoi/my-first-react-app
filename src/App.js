@@ -20,6 +20,7 @@ const App = () => {
     }
 
     useEffect (() => {
+        searchMovies('Batman');
     }, []);
 
     return (
