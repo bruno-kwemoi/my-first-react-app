@@ -1,5 +1,6 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
+import ReactPlayer from 'react-player';
 
 function MovieDetails() {
   const [movie, setMovie] = useState(null);
@@ -7,6 +8,7 @@ function MovieDetails() {
   const [logoPath, setLogoPath] = useState("");
   const [providers, setProviders] = useState(null);
   const [credits, setCredits] = useState(null);
+  const [trailers, setTrailers] = useState([]);
   const { type, id } = useParams();
   const navigate = useNavigate();
 
@@ -51,6 +53,16 @@ function MovieDetails() {
         const providersData = await providersResponse.json();
         // Use US providers if available
         setProviders(providersData.results?.US || null);
+
+        // Fetch trailers
+        const videosResponse = await fetch(
+          `https://api.themoviedb.org/3/${type}/${id}/videos?language=en-US`,
+          options
+        );
+        const videosData = await videosResponse.json();
+        setTrailers(
+          videosData.results.filter((v) => v.type === "Trailer" && v.site === "YouTube")
+        );
       } catch (error) {
         console.error(error);
       }
@@ -61,7 +73,7 @@ function MovieDetails() {
 
   return (
     <div className="movie-details" style={{ width: '100%', maxWidth: '1200px', margin: '0 auto', padding: '2rem' }}>
-      <div className="movie-backdrop" style={{ 
+      <div className="movie-backdrop" style={{
         backgroundImage: `url(${imagePath})`,
         width: '100%',
         height: '70vh',
@@ -89,14 +101,14 @@ function MovieDetails() {
           />
         )}
       </div>
-      <div style={{ 
+      <div style={{
         color: 'white',
         background: 'rgba(0,0,0,0.6)',
         padding: '3rem',
         borderRadius: '24px',
         boxShadow: '0 12px 40px rgba(0,0,0,0.3)'
       }}>
-        <h2 style={{ 
+        <h2 style={{
           color: '#f9d3b4',
           fontWeight: 800,
           fontSize: '2.5rem',
@@ -105,7 +117,7 @@ function MovieDetails() {
         }}>
           {movie?.title || movie?.name}
         </h2>
-        
+
         <div style={{
           display: 'grid',
           gridTemplateColumns: '1fr auto',
@@ -113,7 +125,7 @@ function MovieDetails() {
           alignItems: 'start'
         }}>
           <div style={{ maxWidth: '700px' }}>
-            <p style={{ 
+            <p style={{
               fontSize: '1.2rem',
               lineHeight: '1.8',
               color: '#e0e0e0',
@@ -146,7 +158,7 @@ function MovieDetails() {
 
             {providers && (
               <div style={{ marginTop: '2rem' }}>
-                <h3 style={{ 
+                <h3 style={{
                   color: '#f9d3b4',
                   fontSize: '1.3rem',
                   marginBottom: '1rem',
@@ -154,10 +166,10 @@ function MovieDetails() {
                 }}>
                   Where to Watch
                 </h3>
-                
+
                 {providers.flatrate && (
                   <div style={{ marginBottom: '1.5rem' }}>
-                    <div style={{ 
+                    <div style={{
                       color: '#f9d3b4',
                       fontSize: '0.9rem',
                       marginBottom: '0.5rem',
@@ -191,7 +203,7 @@ function MovieDetails() {
 
                 {providers.rent && (
                   <div style={{ marginBottom: '1.5rem' }}>
-                    <div style={{ 
+                    <div style={{
                       color: '#f9d3b4',
                       fontSize: '0.9rem',
                       marginBottom: '0.5rem',
@@ -225,7 +237,7 @@ function MovieDetails() {
 
                 {providers.buy && (
                   <div>
-                    <div style={{ 
+                    <div style={{
                       color: '#f9d3b4',
                       fontSize: '0.9rem',
                       marginBottom: '0.5rem',
@@ -256,6 +268,21 @@ function MovieDetails() {
                     </div>
                   </div>
                 )}
+              </div>
+            )}
+            {trailers.length > 0 && (
+              <div style={{ marginTop: '2rem' }}>
+                <button onClick={() => navigate(`/${type}/${id}/trailer`)} style={{
+                  background: '#f9d3b4',
+                  color: '#000',
+                  border: 'none',
+                  padding: '0.7rem 1.2rem',
+                  borderRadius: '4px',
+                  cursor: 'pointer',
+                  fontWeight: '600'
+                }}>
+                  Watch Trailer
+                </button>
               </div>
             )}
           </div>
@@ -292,7 +319,7 @@ function MovieDetails() {
 
       {/* Cast and Crew Section */}
       {credits && (
-        <div style={{ 
+        <div style={{
           color: 'white',
           background: 'rgba(0,0,0,0.6)',
           padding: '3rem',
@@ -303,7 +330,7 @@ function MovieDetails() {
           {/* Directors */}
           {credits.crew?.filter(person => person.job === "Director").length > 0 && (
             <div style={{ marginBottom: '3rem' }}>
-              <h3 style={{ 
+              <h3 style={{
                 color: '#f9d3b4',
                 fontSize: '1.5rem',
                 marginBottom: '1.5rem',
@@ -311,7 +338,7 @@ function MovieDetails() {
               }}>
                 Director{credits.crew.filter(person => person.job === "Director").length > 1 ? 's' : ''}
               </h3>
-              <div style={{ 
+              <div style={{
                 display: 'grid',
                 gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))',
                 gap: '2rem'
@@ -319,8 +346,8 @@ function MovieDetails() {
                 {credits.crew
                   .filter(person => person.job === "Director")
                   .map(director => (
-                    <div 
-                      key={director.id} 
+                    <div
+                      key={director.id}
                       style={{
                         display: 'flex',
                         flexDirection: 'column',
@@ -378,7 +405,7 @@ function MovieDetails() {
                           </div>
                         )}
                         <div>
-                          <div style={{ 
+                          <div style={{
                             color: '#fff',
                             fontSize: '1.2rem',
                             fontWeight: '600',
@@ -393,8 +420,8 @@ function MovieDetails() {
                             gap: '0.5rem'
                           }}>
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                              <path d="M22 12c0 5.523-4.477 10-10 10S2 17.523 2 12 6.477 2 12 2s10 4.477 10 10z"/>
-                              <path d="M9 12l2 2 4-4"/>
+                              <path d="M22 12c0 5.523-4.477 10-10 10S2 17.523 2 12 6.477 2 12 2s10 4.477 10 10z" />
+                              <path d="M9 12l2 2 4-4" />
                             </svg>
                             Director
                           </div>
@@ -421,7 +448,7 @@ function MovieDetails() {
                           marginTop: '0.5rem'
                         }}>
                           <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="none">
-                            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
                           </svg>
                           Popularity: {director.popularity.toFixed(1)}
                         </div>
@@ -435,7 +462,7 @@ function MovieDetails() {
           {/* Cast */}
           {credits.cast && credits.cast.length > 0 && (
             <div>
-              <h3 style={{ 
+              <h3 style={{
                 color: '#f9d3b4',
                 fontSize: '1.5rem',
                 marginBottom: '1.5rem',
@@ -463,9 +490,9 @@ function MovieDetails() {
                     transition: 'transform 0.2s ease',
                     cursor: 'pointer'
                   }}
-                  onClick={() => navigate(`/person/${actor.id}`)}
-                  onMouseOver={(e) => e.currentTarget.style.transform = 'translateY(-5px)'}
-                  onMouseOut={(e) => e.currentTarget.style.transform = 'translateY(0)'}
+                    onClick={() => navigate(`/person/${actor.id}`)}
+                    onMouseOver={(e) => e.currentTarget.style.transform = 'translateY(-5px)'}
+                    onMouseOut={(e) => e.currentTarget.style.transform = 'translateY(0)'}
                   >
                     {actor.profile_path ? (
                       <img
@@ -498,16 +525,16 @@ function MovieDetails() {
                       </div>
                     )}
                     <div>
-                      <div style={{ 
-                        color: '#fff', 
+                      <div style={{
+                        color: '#fff',
                         fontWeight: '600',
                         fontSize: '1.1rem',
                         marginBottom: '0.3rem'
                       }}>{actor.name}</div>
-                      <div style={{ 
-                        color: '#f9d3b4', 
-                        fontSize: '0.95rem', 
-                        opacity: 0.9 
+                      <div style={{
+                        color: '#f9d3b4',
+                        fontSize: '0.95rem',
+                        opacity: 0.9
                       }}>{actor.character}</div>
                     </div>
                   </div>
@@ -523,7 +550,7 @@ function MovieDetails() {
 
 const DetailItem = ({ label, value }) => (
   <div style={{ marginBottom: '1.2rem' }}>
-    <div style={{ 
+    <div style={{
       color: '#f9d3b4',
       fontSize: '0.9rem',
       marginBottom: '0.3rem',
@@ -533,7 +560,7 @@ const DetailItem = ({ label, value }) => (
     }}>
       {label}
     </div>
-    <div style={{ 
+    <div style={{
       color: 'white',
       fontSize: '1.1rem',
       fontWeight: '500'

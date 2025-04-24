@@ -6,6 +6,7 @@ import MovieCard from "./MovieCard";
 import MovieDetails from "./MovieDetails";
 import PersonDetails from "./PersonDetails";
 import Header from "./Header";
+import WatchTrailer from "./WatchTrailer";
 
 const options = {
     method: 'GET',
@@ -255,6 +256,7 @@ const App = () => {
                 <Route path="/movies" element={renderMovieList()} />
                 <Route path="/tv" element={renderMovieList()} />
                 <Route path="/anime" element={renderMovieList()} />
+                <Route path="/:type/:id/trailer" element={<WatchTrailer />} />
                 <Route path="/:type/:id" element={<MovieDetails />} />
                 <Route path="/person/:id" element={<PersonDetails />} />
                 <Route path="/search/:title" element={renderMovieList()} />
