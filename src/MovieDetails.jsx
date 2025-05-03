@@ -117,7 +117,6 @@ function MovieDetails() {
         }}>
           {movie?.title || movie?.name}
         </h2>
-
         <div style={{
           display: 'grid',
           gridTemplateColumns: '1fr auto',
@@ -270,8 +269,22 @@ function MovieDetails() {
                 )}
               </div>
             )}
-            {trailers.length > 0 && (
-              <div style={{ marginTop: '2rem' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginTop: '2rem' }}>
+              <button
+                onClick={() => navigate(`/watch/${type}/${id}`)}
+                style={{
+                  background: '#f9d3b4',
+                  border: 'none',
+                  padding: '0.75rem 1.5rem',
+                  borderRadius: '8px',
+                  cursor: 'pointer',
+                  fontSize: '1rem',
+                  fontWeight: 600
+                }}
+              >
+                {type === 'tv' ? 'Watch Series' : 'Watch Movie'}
+              </button>
+              {trailers.length > 0 && (
                 <button onClick={() => navigate(`/${type}/${id}/trailer`)} style={{
                   background: '#f9d3b4',
                   color: '#000',
@@ -283,8 +296,8 @@ function MovieDetails() {
                 }}>
                   Watch Trailer
                 </button>
-              </div>
-            )}
+              )}
+            </div>
           </div>
 
           <div style={{

@@ -184,6 +184,30 @@ body {
   
 }
 
+@media screen and (max-width: 768px) {
+  .header-responsive {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 1rem;
+    padding: 1rem !important;
+  }
+  .header-responsive > div,
+  .header-responsive > nav,
+  .header-responsive > .search {
+    width: 100%;
+    justify-content: center !important;
+  }
+  .header-responsive .search {
+    margin-top: 1rem;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .header-responsive {
+    padding: 0.5rem !important;
+  }
+}
+
 @media screen and (max-width: 600px) {
   .app {
     padding: 4rem 2rem;

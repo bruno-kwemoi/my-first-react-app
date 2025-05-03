@@ -23,7 +23,7 @@ function Header({ searchMovies, onMoviesClick, onTrendingClick, onTVSeriesClick,
     });
 
     return (
-        <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', padding: '1rem 2rem', width: '100%', maxWidth: '1200px', margin: '0 auto' }}>
+        <div className="header-responsive" style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', padding: '1rem 2rem', width: '100%', maxWidth: '1200px', margin: '0 auto' }}>
             <Link to="/" style={{ textDecoration: 'none' }}>
                 <h1 className="logo" style={{ color: '#f9d3b4' }}>Entertainmet Hub</h1>
             </Link>
